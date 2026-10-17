@@ -5,4 +5,4 @@ plugins:
   - jekyll-remote-theme
 header_pages:
   - index.md
-  - 2026-10-17-Test.md
+  - archive.md
