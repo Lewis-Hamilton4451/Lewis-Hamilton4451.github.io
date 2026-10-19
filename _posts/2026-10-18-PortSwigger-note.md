@@ -5,7 +5,7 @@ date: 2026-10-18
 catagorise: CTF
 ---
 
-# **服务器端漏洞（<https://portswigger.net/web-security>）**
+# **服务器端漏洞---基础（<https://portswigger.net/web-security>）**
 
 ## **一.路径遍历（目录遍历）**
 
@@ -107,11 +107,7 @@ catagorise: CTF
 
 <br />
 
-<br />
-
-<br />
-
-## **六.操作系统命令注入**
+## **六.操作系统命令注入（shell注入）**
 
 | Purpose of command    | Linus       | Windows      |
 | :-------------------- | :---------- | :----------- |
@@ -120,4 +116,67 @@ catagorise: CTF
 | Network configuration | ifconfig    | ipconfig/all |
 | Network connections   | netstat -an | netstat -an  |
 | Running processes     | ps -ef      | tasklist     |
+
+操作系统命令注入允许攻击者执行运行应用程序的服务器上的操作系统命令，通常会完全控制该应用程序及其数据
+
+例如一个购物网站允许用户查看库存信息，这一功能是通过调用一个shell命令来实现的
+
+依据这一特性，攻击者可以在命令后面用命令隔离符加上"echo hello"来测试是否存在shell注入漏洞
+
+<br />
+
+## **七.SQL注入**
+
+SQL 注入是一种网络安全漏洞，攻击者可以通过这种漏洞干扰应用程序向数据库发送的查询，这样一来攻击者有可能能获得到一些敏感信息，另外，攻击者还可能修改数据让程序的数据和行为改变，甚至通过将 SQL 注入攻击升级破坏底层服务器或其他后端基础设施
+
+可以执行以下操作来检测SQL注入
+
+- 使用单引号字符 `'` 来查找错误或其他异常情况
+- 一些与 SQL 相关的特殊语法，这些语法会计算出入口点的基础值以及另一个不同的值，然后寻找应用程序响应中的系统性的差异
+- 布尔条件，例如 `OR 1=1` 和 `OR 1=2` ，可以找出应用程序响应中的差异
+- 负载在作为 SQL 查询的一部分执行时，会触发时间延迟，然后检测响应时间上的差异
+- OAST 负载旨在在 SQL 查询中执行时触发网络中的外部交互，并监控由此产生的所有交互情况
+
+一个SQL请求如下：
+
+```SQL
+SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+```
+
+<br />
+
+- 所有详细信息（ `*` ）
+- 来自(FROM) `products` 表格
+- 在 `category` 的位置是 `Gifts`
+- `released` 等于 `1` ，released是这个数据库中预定义的标识符，用于隐藏未发布的产品信息
+
+在SQL中，” -- “是注释符
+
+一个修改后的SQL请求：
+
+```SQL
+SELECT * FROM products WHERE category = 'Gifts' OR 1=1--' AND released = 1
+```
+
+这个请求会返回所有满足以下条件的项目：要么 `category` 等于 `Gifts` ，要么 `1` 等于 `1` 。由于 `1=1` 始终为真，因此该查询会返回所有项目
+
+```
+Warning：在将条件语句注入 SQL 查询时需要注意安全。即使该条件在你所插入的上下文中看起来并无危害，但实际上应用程序常常会在多个不同的查询中使用来自同一请求的数据。例如，如果条件语句超出了 UPDATE 或 DELETE 这样的语句范围，就可能会导致数据意外丢失
+```
+
+***
+
+SQL注入漏洞可以**破坏应用程序的逻辑结构**
+
+下面这个请求
+
+```SQL
+SELECT * FROM users WHERE username = 'wiener' AND password = 'bluecheese'
+```
+
+这是一个登录请求，这种情况下，攻击者可以把对密码的检查注释掉，从而使用任意已注册的用户名登录
+
+```SQL
+SELECT * FROM users WHERE username = 'administrator'--' AND password = ''
+```
 
