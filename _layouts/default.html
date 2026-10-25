@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'zh-CN' }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% seo %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container site-header-inner">
+        <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+        <nav class="site-nav">
+          <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>首页</a>
+          <a href="{{ '/blog/' | relative_url }}"{% if page.url == '/blog/' %} class="active"{% endif %}>归档</a>
+          <a href="https://github.com/Lewis-Hamilton4451" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container content">
+      {{ content }}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <small>Hosted on GitHub Pages &mdash; Theme based on <a href="https://github.com/pages-themes/minimal">minimal</a></small>
+      </div>
+    </footer>
+  </body>
+</html>

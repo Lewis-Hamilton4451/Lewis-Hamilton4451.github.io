@@ -1,8 +1,9 @@
 title: Lewis-Hamilton4451's Blog
 description: 我的个人网站
+author: Lewis-Hamilton4451
+lang: zh-CN
+
 remote_theme: pages-themes/minimal@v0.2.0
 plugins:
   - jekyll-remote-theme
-header_pages:
-  - index.md
-  - archive.md
+  - jekyll-seo-tag
