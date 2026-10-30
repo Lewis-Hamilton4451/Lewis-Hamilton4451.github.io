@@ -3,6 +3,8 @@ layout: post
 title: "PortSwigger靶场笔记"
 date: 2026-10-18
 categories: [CTF]
+# 固定链接，避免加了分类后 URL 变成 /ctf/... 导致旧地址失效
+permalink: /2026/10/18/PortSwigger-note.html
 ---
 
 # **服务器端漏洞---基础（<https://portswigger.net/web-security>）**
