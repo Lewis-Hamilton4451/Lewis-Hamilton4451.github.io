@@ -2,7 +2,7 @@
 layout: post
 title: "PortSwigger靶场笔记"
 date: 2026-10-18
-catagorise: CTF
+categories: [CTF]
 ---
 
 # **服务器端漏洞---基础（<https://portswigger.net/web-security>）**

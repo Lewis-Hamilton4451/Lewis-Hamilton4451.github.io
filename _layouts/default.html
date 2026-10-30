@@ -13,7 +13,28 @@
         <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
         <nav class="site-nav">
           <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>首页</a>
-          <a href="{{ '/blog/' | relative_url }}"{% if page.url == '/blog/' %} class="active"{% endif %}>归档</a>
+
+          {% comment %}
+            归档下拉菜单：
+            一级 = 全部文章 + My_WP；二级 = My_WP 下的比赛分类。
+            二级分类由 _data/wp.yml 自动生成，新增比赛只需改那个文件，不用动这里。
+          {% endcomment %}
+          <div class="nav-dropdown">
+            <button type="button" class="nav-dropdown-toggle{% if page.url == '/blog/' or page.url contains '/wp/' %} active{% endif %}" aria-haspopup="true" aria-expanded="false">归档<span class="caret">▾</span></button>
+            <div class="nav-dropdown-menu">
+              <a href="{{ '/blog/' | relative_url }}">全部文章</a>
+              <div class="nav-subdrop">
+                <button type="button" class="nav-subdrop-toggle" aria-haspopup="true" aria-expanded="false">My_WP<span class="caret">▾</span></button>
+                <div class="nav-subdrop-menu">
+                  {% for cat in site.data.wp.categories %}
+                  {% comment %}cat.slug 是页面地址，cat.name 是文章里 categories 用的名字{% endcomment %}
+                  <a href="{{ '/wp/' | append: cat.slug | append: '/' | relative_url }}">{{ cat.name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <a href="https://github.com/Lewis-Hamilton4451" target="_blank" rel="noopener">GitHub</a>
         </nav>
       </div>
@@ -28,5 +49,89 @@
         <small>Hosted on GitHub Pages &mdash; Theme based on <a href="https://github.com/pages-themes/minimal">minimal</a></small>
       </div>
     </footer>
+
+    <script>
+      // 导航下拉菜单交互：
+      // - 鼠标移入展开，移出 200ms 后收起（留出穿过菜单缝隙的时间）
+      // - 点击按钮 toggle 展开/收起，点击页面空白处或按 Esc 全部收起
+      (function () {
+        var dropdowns = Array.prototype.slice.call(
+          document.querySelectorAll('.nav-dropdown, .nav-subdrop')
+        );
+
+        // 取每个下拉项的第一个子元素（约定为 button 开关）
+        function getToggle(item) {
+          var first = item.firstElementChild;
+          return first && first.tagName === 'BUTTON' ? first : null;
+        }
+
+        // 收起单个下拉，并同步 aria-expanded，保证键盘/读屏可用
+        function closeItem(item) {
+          item.classList.remove('open');
+          var btn = getToggle(item);
+          if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+
+        function openItem(item) {
+          item.classList.add('open');
+          var btn = getToggle(item);
+          if (btn) btn.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeAll() {
+          dropdowns.forEach(closeItem);
+        }
+
+        dropdowns.forEach(function (item) {
+          var btn = getToggle(item);
+          if (!btn) return;
+
+          var closeTimer = null;
+
+          // 鼠标悬停：进入即展开
+          item.addEventListener('mouseenter', function () {
+            if (closeTimer) {
+              clearTimeout(closeTimer);
+              closeTimer = null;
+            }
+            openItem(item);
+          });
+
+          // 鼠标离开：延迟收起；同时收起它下面的子菜单
+          item.addEventListener('mouseleave', function () {
+            closeTimer = setTimeout(function () {
+              closeItem(item);
+              item.querySelectorAll('.nav-dropdown, .nav-subdrop').forEach(closeItem);
+            }, 200);
+          });
+
+          // 点击开关：展开/收起
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation(); // 阻止冒泡到 document，否则会被“点击空白关闭”立刻关掉
+            var wasOpen = item.classList.contains('open');
+
+            // 关闭与当前项无重叠的其它下拉，避免同时展开多个菜单
+            dropdowns.forEach(function (other) {
+              if (other !== item && !other.contains(item) && !item.contains(other)) {
+                closeItem(other);
+              }
+            });
+
+            if (wasOpen) {
+              closeItem(item);
+              item.querySelectorAll('.nav-dropdown, .nav-subdrop').forEach(closeItem);
+            } else {
+              openItem(item);
+            }
+          });
+        });
+
+        document.addEventListener('click', closeAll);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll();
+        });
+      })();
+    </script>
   </body>
 </html>

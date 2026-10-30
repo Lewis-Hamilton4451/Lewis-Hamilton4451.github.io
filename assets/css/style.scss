@@ -48,7 +48,14 @@ footer {
   color: #222;
 }
 
-.site-nav a {
+.site-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.site-nav > a,
+.site-nav > .nav-dropdown {
   margin-left: 24px;
   font-size: 15px;
 }
@@ -130,7 +137,145 @@ footer {
     justify-content: center;
   }
 
-  .site-nav a {
+  .site-nav > a,
+  .site-nav > .nav-dropdown {
     margin: 0 8px;
   }
+}
+
+/* ===== 8. 导航栏下拉菜单 ===== */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-dropdown-toggle,
+.nav-subdrop-toggle {
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #267cb9;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.nav-dropdown-toggle:hover,
+.nav-subdrop-toggle:hover {
+  text-decoration: underline;
+}
+
+.nav-dropdown-toggle.active {
+  color: #222;
+  font-weight: 700;
+  border-bottom: 2px solid #267cb9;
+  padding-bottom: 3px;
+}
+
+.caret {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+.nav-dropdown.open > .nav-dropdown-toggle .caret,
+.nav-subdrop.open > .nav-subdrop-toggle .caret {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu,
+.nav-subdrop-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 150px;
+  padding: 6px 0;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  z-index: 200;
+}
+
+/* 展开状态由 .open 控制，悬停/点击逻辑在 default.html 的脚本里 */
+.nav-dropdown.open > .nav-dropdown-menu,
+.nav-subdrop.open > .nav-subdrop-menu {
+  display: block;
+}
+
+.nav-dropdown-menu a,
+.nav-subdrop-menu a {
+  display: block;
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 15px;
+  color: #267cb9;
+  white-space: nowrap;
+}
+
+.nav-dropdown-menu a:hover,
+.nav-subdrop-menu a:hover,
+.nav-dropdown-menu a:focus,
+.nav-subdrop-menu a:focus {
+  background: #f5f5f5;
+  color: #222;
+  text-decoration: none;
+}
+
+/* 二级菜单：从 My_WP 下方弹出独立浮层（与一级菜单右对齐） */
+.nav-subdrop {
+  position: relative;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.nav-subdrop-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 16px;
+}
+
+.nav-subdrop-menu {
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  min-width: 140px;
+}
+
+/* ===== 9. WP 分类页 ===== */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.post-count {
+  font-size: 14px;
+  color: #999;
+}
+
+.post-category {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-size: 12px;
+  color: #267cb9;
+  background: #eef6fb;
+  border-radius: 10px;
+}
+
+.back-link {
+  margin-bottom: 16px;
+  font-size: 14px;
 }

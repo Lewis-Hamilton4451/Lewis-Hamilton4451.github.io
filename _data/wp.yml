@@ -1,0 +1,7 @@
+# My_WP 下拉菜单中的比赛分类
+# 以后新增比赛，只需在这里加一项，并在 _posts 里写文章的 categories
+categories:
+  - name: "_萌新"
+    slug: mengxin
+  - name: "菜鸟杯"
+    slug: cainiaobei
